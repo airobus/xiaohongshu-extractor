@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 
-const JINA_API_KEY = 'jina_bc8ca6109d2948d1a32e5e68b84247dbHZiosDR-RvacaNo7E0h1iQeTNPyb';
-
 export async function POST(request: Request) {
   try {
     const { url } = await request.json();
