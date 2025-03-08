@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface FetchResult {
   title: string;
@@ -146,13 +147,13 @@ const XHSFetcher = () => {
                 <div className="grid grid-cols-2 gap-4">
                   {result.images.map((image, index) => (
                     <div key={index} className="relative aspect-square rounded-xl overflow-hidden group">
-                      <img
+                      <Image
                         src={image}
                         alt={`笔记图片 ${index + 1}`}
-                        className="absolute inset-0 w-full h-full object-cover 
-                                 transition duration-300 ease-out
-                                 group-hover:scale-105"
+                        fill
+                        className="object-cover transition duration-300 ease-out group-hover:scale-105"
                         loading="lazy"
+                        sizes="(max-width: 768px) 50vw, 33vw"
                       />
                     </div>
                   ))}

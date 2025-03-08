@@ -50,7 +50,6 @@ async function fetchRawXiaohongshuContent(url: string): Promise<string> {
       const response = await fetch(jinaUrl, {
         headers: {
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-          // 'Authorization': `Bearer ${JINA_API_KEY}`,
         },
         signal: controller.signal
       });
@@ -65,9 +64,9 @@ async function fetchRawXiaohongshuContent(url: string): Promise<string> {
       console.log('成功获取到原始HTML内容，长度:', html.length);
       
       return html;
-    } catch (error: any) {
+    } catch (error) {
       clearTimeout(timeoutId);
-      if (error.name === 'AbortError') {
+      if (error instanceof Error && error.name === 'AbortError') {
         throw new Error('请求超时，请稍后重试');
       }
       throw error;
@@ -145,24 +144,6 @@ function extractXHSUrl(text: string): string | null {
   // 如果输入的就是一个完整的URL，直接返回
   if (text.startsWith('http://') || text.startsWith('https://')) {
     return text;
-  }
-
-  return null;
-}
-
-function extractNoteId(url: string): string | null {
-  // 处理不同格式的小红书链接
-  const patterns = [
-    /xhslink\.com\/([^?&\/]+)/,
-    /xiaohongshu\.com\/discovery\/item\/([^?&\/]+)/,
-    /([a-zA-Z0-9]{24})/  // 通用ID格式
-  ];
-
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match && match[1]) {
-      return match[1];
-    }
   }
 
   return null;
