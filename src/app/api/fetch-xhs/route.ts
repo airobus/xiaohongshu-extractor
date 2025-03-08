@@ -101,14 +101,17 @@ function parseXHSContent(html: string) {
         .trim();
     }
 
-    // 提取图片URL，排除页面UI元素的图片
+    // 提取图片URL
     const images: string[] = [];
-    const imgRegex = /https:\/\/sns-webpic-qc\.xhscdn\.com\/[^"\s]+(?:webp|png|jpg|jpeg)/g;
+    const imgRegex = /!\[Image\s+\d+\]\((https:\/\/sns-webpic-qc\.xhscdn\.com\/[^)]+)\)/g;
     let match;
+    
     while ((match = imgRegex.exec(html)) !== null) {
-      const imgUrl = match[0].split('!')[0]; // 移除图片URL后面的参数
-      if (!images.includes(imgUrl)) {
-        images.push(imgUrl);
+      if (match[1]) {  // match[1] 是括号中的完整URL
+        const imgUrl = match[1];  // 保留完整URL，包括后缀
+        if (!images.includes(imgUrl)) {
+          images.push(imgUrl);
+        }
       }
     }
 
@@ -119,10 +122,8 @@ function parseXHSContent(html: string) {
       images: images.filter(url => 
         !url.includes('avatar') && 
         !url.includes('icon') && 
-        !url.includes('logo') &&
-        !url.includes('spectrum') &&
-        !url.includes('blob:')
-      ).slice(0, 9)
+        !url.includes('logo')
+      )  // 不再需要 slice(0, 9)，因为我们只提取实际的笔记图片
     };
   } catch (error) {
     console.error('Error parsing content:', error);
